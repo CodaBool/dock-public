@@ -1,0 +1,10 @@
+version: "3.5"
+services:
+  bitwarden:
+    image: vaultwarden/server
+    container_name: bitwarden
+    ports:
+      - 8092:80
+    volumes:
+      - ./data:/data
+    restart: unless-stopped

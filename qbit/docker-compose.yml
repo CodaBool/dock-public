@@ -1,0 +1,46 @@
+version: "3.9"
+services:
+  vpn-qbit:
+    container_name: qbit
+    image: guillaumedsde/alpine-qbittorrent-openvpn
+    restart: unless-stopped
+    volumes:
+      - ./config:/config
+      - /hdd/qbit:/downloads
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - OPENVPN_PROVIDER=PROTONVPN
+      - OPENVPN_CONFIG=us.protonvpn.com.udp
+      - PUID=1000
+      - PGID=1000
+      - LAN=192.168.0.25/16
+      - TUN=/dev/net/tun
+      - DNS=1.1.1.1
+    env_file:
+      - ./.env
+    ports:
+      - 8080:8080
+    cap_add:
+      - NET_ADMIN
+
+# Get the open vpn username & password from inside the Account page
+# place them in a .env file in the following format
+
+# OPENVPN_USERNAME=
+# OPENVPN_PASSWORD=
+
+# Alternatively add the environments as lines in this file and never commit this file
+
+# Alternative Image
+# https://hub.docker.com/r/linuxserver/qbittorrent
+#- 8085:8085
+#- 6881:6881
+#- 6881:6881/udp
+
+# This will create a container which uses openvpn
+# to enable an always connect qbittorrent client using a vpn
+
+# WARNING: this will only be accessible by localhost
+# if you want to access it publicly I recommend a tunnel
+# I am currently using a Cloudflare tunnel 
+# https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/tunnel-guide
